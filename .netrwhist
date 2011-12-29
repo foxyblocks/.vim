@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/Users/christian/Projects/Pinchit/dotcom/application/views/mobile'
+let g:netrw_dirhist_2='/Users/christian/Projects/Pinchit/dotcom/application/views/mobile/my_account'
+let g:netrw_dirhist_3='/Users/christian/Projects/Pinchit/dotcom/application/views/mobile'
+let g:netrw_dirhist_4='/Users/christian/Projects/Pinchit/dotcom/application/views/mobile/user'
+let g:netrw_dirhist_5='/Users/christian/Projects/Pinchit/dotcom/application/views/mobile'
+let g:netrw_dirhist_6='/Users/christian/Projects/Pinchit/dotcom/application/views'
+let g:netrw_dirhist_7='/Users/christian/Projects/Pinchit/dotcom/application/views/payment'
