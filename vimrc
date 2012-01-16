@@ -22,6 +22,30 @@ map <S-Enter> O<Esc>
 map <Enter> o<Esc>
 
 
+"--------------------------------------------------------------------- Mappings
+
+let mapleader = ","
+
+"map space to normal mode
+nnoremap <space> :
+
+"jj to escape!
+inoremap jj <esc>
+
+" make it so that j and k jump visual lines instead of file lines
+nnoremap j gj
+nnoremap k gk
+
+"quickly edit vimrc
+nnoremap <leader>ev :e $MYVIMRC<cr>
+
+"textmate indentation mappings
+nmap <D-[> <<
+nmap <D-]> >>
+vmap <D-[> <gv
+vmap <D-]> >gv
+
+
 "----------------------------------------------------------------------- Syntax
 syntax on "turn on syntax highlighting
 
@@ -108,34 +132,32 @@ set shell=/bin/sh "play nice with RVM
 " write files as su
 cmap W w !sudo tee % > /dev/null
 
-"--------------------------------------------------------------------- Mappings
-"map space to normal mode
-nnoremap <space> :
-
-"jj to escape!
-inoremap jj <esc>
-
-" make it so that j and k jump visual lines instead of file lines
-nnoremap j gj
-nnoremap k gk
-
-"quickly edit vimrc
-nnoremap <leader>ev :e $MYVIMRC<cr>
 
 
 "--------------------------------------------------------------------- Autocmds
 " reload vimrc as soon as we're done editing it
-autocmd! bufwritepost $MYVIMRC source $MYVIMRC
-
+" Source the vimrc file after saving it
+if has("autocmd")
+  autocmd bufwritepost .vimrc source $MYVIMRC
+endif
 
 "-------------------------------------------------------------------- Filetypes
 au BufRead,BufNewFile *.md set filetype=markdown
+au BufRead,BufNewFile *.php set filetype=php.html
+
 
 
 "-------------------------------------------------------------------- Command-T
 let g:CommandTMaxHeight=20 "restrict the max height of buffer
 "set flush
-nmap <leader>f :CommandTFlush<cr>\|:CommandT<cr>
+nmap <leader>t :CommandTFlush<cr>\|:CommandT<cr>
+
+
+"-------------------------------------------------------------------- Zencoding
+let g:user_zen_expandabbr_key = '<c-e>'
+
+let g:use_zen_complete_tag = 1
+
 
 "----------------------------------------------------------------------- Colors
 colorscheme solarized "use solarized color scheme
