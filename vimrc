@@ -29,8 +29,9 @@ let mapleader = ","
 "map space to normal mode
 nnoremap <space> :
 
-"jj to escape!
+"jj and ;; to escape!
 inoremap jj <esc>
+inoremap ;; <esc>
 
 " make it so that j and k jump visual lines instead of file lines
 nnoremap j gj
@@ -45,6 +46,12 @@ nmap <D-]> >>
 vmap <D-[> <gv
 vmap <D-]> >gv
 
+"split lines (opposite of J)
+nnoremap <C-J> a<CR><Esc>k$"
+
+
+"map nerdtree
+map <D-D> :NERDTreeToggle<cr>
 
 "----------------------------------------------------------------------- Syntax
 syntax on "turn on syntax highlighting
@@ -143,7 +150,7 @@ endif
 
 "-------------------------------------------------------------------- Filetypes
 au BufRead,BufNewFile *.md set filetype=markdown
-au BufRead,BufNewFile *.php set filetype=php.html
+" au BufRead,BufNewFile *.php set filetype=php.html
 
 
 
@@ -158,6 +165,9 @@ let g:user_zen_expandabbr_key = '<c-e>'
 
 let g:use_zen_complete_tag = 1
 
+"------------------------------------------------------------------------ Rspec
+"
+" let g:RspecSplitHorizontal=0
 
 "----------------------------------------------------------------------- Colors
 colorscheme solarized "use solarized color scheme

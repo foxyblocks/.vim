@@ -1,10 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/Users/christian/Projects/Pinchit/dotcom/config'
-let g:netrw_dirhist_2='/Users/christian/Projects/Pinchit/dotcom'
-let g:netrw_dirhist_3='/Users/christian/Projects/Pinchit'
-let g:netrw_dirhist_4='/Users/christian/Projects/Pinchit/dotcom'
-let g:netrw_dirhist_5='/Users/christian/Projects/Pinchit/dotcom/CodeIgniter_1.7.2'
-let g:netrw_dirhist_6='/Users/christian/Projects/Pinchit/dotcom'
-let g:netrw_dirhist_7='/Users/christian/Projects/Hipster-Score'
-let g:netrw_dirhist_8='/Users/christian/Projects/Pinchit/dotcom'
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/Users/christian/Projects/Pinchit/dotcom'
+let g:netrw_dirhist_2='/Users/christian/Projects/Pinchit/rpinchit'
+let g:netrw_dirhist_3='/Users/christian'
+let g:netrw_dirhist_4='/Users/christian/Projects/Pinchit/rpinchit'
+let g:netrw_dirhist_5='/Users/christian/Projects/Pinchit/dotcom'
