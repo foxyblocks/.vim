@@ -1,9 +1,9 @@
+"runtime bundle/vim-unbundle/unbundle.vim
 call pathogen#infect()
 
 "-------------------------------------------------------------------- Workspace
 set number "line numbers
 set ruler "column and row position
-set cursorline "highlight the current line
 set colorcolumn=80 "column guide on the right
 set scrolloff=5 "when scrolling, stay this far from extremes of buffer
 set list listchars=tab:\ \ ,trail:· "show trailing whitespace
@@ -16,6 +16,7 @@ set backspace=indent,eol,start "lazy backspacing
 set showcmd "show the current command
 set laststatus=2 "always show the status line. Always!
 set showtabline=2 "show the tab line at the top, always
+let loaded_matchparen = 1
 
 " line break without going into insert mode
 map <S-Enter> O<Esc>
@@ -31,7 +32,6 @@ nnoremap <space> :
 
 "jj and ;; to escape!
 inoremap jj <esc>
-inoremap ;; <esc>
 
 " make it so that j and k jump visual lines instead of file lines
 nnoremap j gj
@@ -47,16 +47,16 @@ vmap <D-[> <gv
 vmap <D-]> >gv
 
 "split lines (opposite of J)
-nnoremap <C-J> a<CR><Esc>k$"
+"nnoremap <C-J> a<CR><Esc>k$"
 
 
 "map nerdtree
 map <D-D> :NERDTreeToggle<cr>
+nmap ,n :NERDTreeFind<CR>
 
 "----------------------------------------------------------------------- Syntax
 syntax on "turn on syntax highlighting
 
-set showmatch "highlight matching [] and {}
 
 
 "----------------------------------------------------------------------- Search
@@ -99,8 +99,6 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " screw taglist; yay tabs!
-nmap <C-[> :tabprevious<cr>
-nmap <C-]> :tabnext<cr>
 
 " easily resize windows with + and -
 if bufwinnr(1)
@@ -167,15 +165,24 @@ let g:use_zen_complete_tag = 1
 
 "------------------------------------------------------------------------ Rspec
 "
-" let g:RspecSplitHorizontal=0
+map <D-r> :SweetVimRspecRunFile<CR>
+map <D-R> :SweetVimRspecRunFocused<CR>
+map <M-D-r> :SweetVimRspecRunPrevious<CR>
 
 "----------------------------------------------------------------------- Colors
 colorscheme solarized "use solarized color scheme
 
 "
-"set background=dark "use the dark solarized color scheme
+set background=dark "use the dark solarized color scheme
 
 " turn off the annoying top bar in MacVim
 if has("gui_running")
  set guioptions=egmrt
 endif
+
+"----------------------------------------------------------------------ultiSnip
+let g:UltiSnipsEditSplit = "vertical"
+
+"----------------------------------------------------------------------snipMate
+let g:snippets_dir = "~/.vim/snippets/"
+
