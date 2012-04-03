@@ -58,7 +58,6 @@ set showcmd "show the current command
 set laststatus=2 "always show the status line. Always!
 set showtabline=2 "show the tab line at the top, always
 let loaded_matchparen = 1
-set macmeta
 
 " line break without going into insert mode
 " map <S-Enter> O<Esc>
@@ -216,12 +215,6 @@ nmap <leader>t :CommandTFlush<cr>\|:CommandT<cr>
 let g:user_zen_expandabbr_key = '<c-e>'
 
 let g:use_zen_complete_tag = 1
-
-"------------------------------------------------------------------------ Rspec
-"
-map <D-r> :SweetVimRspecRunFile<CR>
-map <D-R> :SweetVimRspecRunFocused<CR>
-map <M-D-r> :SweetVimRspecRunPrevious<CR>
 
 "----------------------------------------------------------------------- Colors
 colorscheme solarized "use solarized color scheme
