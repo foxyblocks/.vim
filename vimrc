@@ -1,5 +1,45 @@
-"runtime bundle/vim-unbundle/unbundle.vim
-call pathogen#infect()
+set nocompatible "force using vim, not vi
+filetype off                   " required!
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+"----------------------------------------------------------------------- Vundle
+
+" let Vundle manage Vundle
+Bundle 'gmarik/vundle'
+
+Bundle 'tpope/vim-rails.git'
+"Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'SirVer/ultisnips'
+Bundle 'rstacruz/vim-ultisnips-css'
+Bundle 'tComment'
+Bundle 'tpope/vim-haml'
+Bundle 'tcomment'
+Bundle 'wincent/Command-T'
+Bundle 'fugitive.vim'
+Bundle 'surround.vim'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'Solarized'
+Bundle 'vim-coffee-script'
+Bundle 'mileszs/ack.vim'
+Bundle 'mattn/zencoding-vim'
+Bundle 'scrooloose/nerdtree'
+Bundle 'cocoa.vim'
+Bundle 'neocomplcache'
+Bundle 'taglist.vim'
+Bundle 'Syntastic'
+Bundle 'php.vim'
+Bundle 'Tagbar'
+
+filetype plugin indent on     " required! 
+"
+" Brief help
+" :BundleList          - list configured bundles
+" :BundleInstall(!)    - install(update) bundles
+" :BundleSearch(!) foo - search(or refresh cache first) for foo
+" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+"
+" see :h vundle for more details or wiki for FAQ
 
 "-------------------------------------------------------------------- Workspace
 set number "line numbers
@@ -10,6 +50,7 @@ set list listchars=tab:\ \ ,trail:· "show trailing whitespace
 set smartindent "indent wisely
 set autoindent "auto-indent
 set wrap "soft-wrap text
+set showcmd "see partial commands as you type them
 set textwidth=79 "wrap above at this amount
 set wrapmargin=2 "wrap buffer
 set backspace=indent,eol,start "lazy backspacing
@@ -17,10 +58,11 @@ set showcmd "show the current command
 set laststatus=2 "always show the status line. Always!
 set showtabline=2 "show the tab line at the top, always
 let loaded_matchparen = 1
+set macmeta
 
 " line break without going into insert mode
-map <S-Enter> O<Esc>
-map <Enter> o<Esc>
+" map <S-Enter> O<Esc>
+" map <Enter> o<Esc>
 
 
 "--------------------------------------------------------------------- Mappings
@@ -49,10 +91,21 @@ vmap <D-]> >gv
 "split lines (opposite of J)
 "nnoremap <C-J> a<CR><Esc>k$"
 
+"no more accidentally losing undo history
+nmap <s-r> <c-r>
+
+"map search to ack
+nmap <D-S-F> :Ack<space>
+noremap <Leader>a :Ack <cword><cr>
+
 
 "map nerdtree
 map <D-D> :NERDTreeToggle<cr>
 nmap ,n :NERDTreeFind<CR>
+
+"reformat after paste
+:nnoremap <Esc>p p'[v']=
+:nnoremap <Esc>P P'[v']=
 
 "----------------------------------------------------------------------- Syntax
 syntax on "turn on syntax highlighting
@@ -113,7 +166,8 @@ set winwidth=84
 " fail
 set winheight=5
 set winminheight=5
-set winheight=999
+" set winheight=600
+set previewheight=50
 
 " super splitting!
 " window
@@ -127,10 +181,10 @@ nmap <leader>sl :rightbelow vnew<cr>
 nmap <leader>sk :leftabove new<cr>
 nmap <leader>sj :rightbelow new<cr>
 
+
 "------------------------------------------------------------------------- Misc
 filetype plugin indent on "detect filetype automatically
 
-set nocompatible "force using vim, not vi
 set encoding=utf-8 "default character encoding
 set shell=/bin/sh "play nice with RVM
 
@@ -173,16 +227,64 @@ map <M-D-r> :SweetVimRspecRunPrevious<CR>
 colorscheme solarized "use solarized color scheme
 
 "
-set background=dark "use the dark solarized color scheme
+set background=dark "use the light solarized scheme (other option is 'dark')
+call togglebg#map("<F5>")
 
 " turn off the annoying top bar in MacVim
 if has("gui_running")
  set guioptions=egmrt
 endif
 
-"----------------------------------------------------------------------ultiSnip
-let g:UltiSnipsEditSplit = "vertical"
+" "----------------------------------------------------------------------ultiSnip
+" let g:UltiSnipsEditSplit = "vertical"
+" let g:UltiSnipsExpandTrigger="<tab>"
+" let g:UltiSnipsJumpForwardTrigger="<tab>"
+" let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 "----------------------------------------------------------------------snipMate
 let g:snippets_dir = "~/.vim/snippets/"
 
+"---------------------------------------------------------------------CocoaPods
+au BufNewFile,BufRead Podfile,*.podspec      set filetype=ruby
+
+"-----------------------------------------------------------------neocomplcache
+
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 0
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+
+
+"---------------------------------------------------------------------syntastic
+let g:syntastic_check_on_open=1
+
+"-----------------------------------------------------------------------php.vim
+
+"syntax highlighting for SQL in strings
+let php_sql_query = 1
+
+" Enable HTML syntax highlighting inside strings
+let php_htmlInStrings = 1
+
+"php folding
+let php_folding = 1
+
+"------------------------------------------------------------------------tagbar
+nmap <leader><Tab> :TagbarToggle<CR>
+
+
+"-------------------------------------------------------------------------ctags
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <M-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
