@@ -7,7 +7,6 @@ call vundle#rc()
 
 " let Vundle manage Vundle
 Bundle 'gmarik/vundle'
-
 Bundle 'tpope/vim-rails.git'
 "Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'SirVer/ultisnips'
@@ -25,11 +24,14 @@ Bundle 'mileszs/ack.vim'
 Bundle 'mattn/zencoding-vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'cocoa.vim'
-Bundle 'neocomplcache'
+" Bundle 'neocomplcache'
 Bundle 'taglist.vim'
 Bundle 'Syntastic'
 Bundle 'php.vim'
 Bundle 'Tagbar'
+Bundle 'Tabular'
+Bundle 'vim-pad'
+Bundle 'https://github.com/juvenn/mustache.vim'
 
 filetype plugin indent on     " required! 
 "
@@ -106,6 +108,9 @@ nmap ,n :NERDTreeFind<CR>
 :nnoremap <Esc>p p'[v']=
 :nnoremap <Esc>P P'[v']=
 
+"Easy find replace
+:map <F3> :%s /
+
 "----------------------------------------------------------------------- Syntax
 syntax on "turn on syntax highlighting
 
@@ -180,6 +185,39 @@ nmap <leader>sl :rightbelow vnew<cr>
 nmap <leader>sk :leftabove new<cr>
 nmap <leader>sj :rightbelow new<cr>
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CUSTOM AUTOCMDS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup vimrcEx
+  " Clear all autocmds in the group
+  autocmd!
+  autocmd FileType text setlocal textwidth=78
+  " Jump to last cursor position unless it's invalid or in an event handler
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
+  "for ruby, autoindent with two spaces, always expand tabs
+  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
+  autocmd FileType python set sw=4 sts=4 et
+
+  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
+
+  autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
+  autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
+
+  " Indent p tags
+  autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+
+  " reload vimrc as soon as we're done editing it
+  " Source the vimrc file after saving it
+  if has("autocmd")
+    autocmd bufwritepost .vimrc source $MYVIMRC
+  endif
+
+augroup END
+
 
 "------------------------------------------------------------------------- Misc
 filetype plugin indent on "detect filetype automatically
@@ -190,14 +228,46 @@ set shell=/bin/sh "play nice with RVM
 " write files as su
 cmap W w !sudo tee % > /dev/null
 
+:nnoremap <CR> :nohlsearch<cr>
+
+" for insert mode remap <c-l> to:
+" Insert a hash rocket  for ruby
+" Insert a -> for php
+function! SmartHash()
+ let ruby = match(expand("%"), '\(.rb\|.haml\)$') != -1
+ let php = match(expand("%"), '.php') != -1
+
+ if php
+   return "\->"
+ end
+
+ if ruby
+   return "\ => "
+ end
+
+ return ""
+
+endfunction
+
+imap <c-l> <c-r>=SmartHash()<cr>
 
 
-"--------------------------------------------------------------------- Autocmds
-" reload vimrc as soon as we're done editing it
-" Source the vimrc file after saving it
-if has("autocmd")
-  autocmd bufwritepost .vimrc source $MYVIMRC
-endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MULTIPURPOSE TAB KEY
+" Indent if we're at the beginning of a line. Else, do completion.
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
+
 
 "-------------------------------------------------------------------- Filetypes
 au BufRead,BufNewFile *.md set filetype=markdown
@@ -206,9 +276,10 @@ au BufRead,BufNewFile *.md set filetype=markdown
 
 
 "-------------------------------------------------------------------- Command-T
-let g:CommandTMaxHeight=20 "restrict the max height of buffer
+"let g:CommandTMaxHeight=20 "restrict the max height of buffer
 "set flush
-nmap <leader>t :CommandTFlush<cr>\|:CommandT<cr>
+nmap <leader>g :CommandTFlush<cr>\|:CommandT<cr>
+
 
 
 "-------------------------------------------------------------------- Zencoding
@@ -216,11 +287,17 @@ let g:user_zen_expandabbr_key = '<c-e>'
 
 let g:use_zen_complete_tag = 1
 
+"------------------------------------------------------------------------ Rspec
+"
+map <D-r> :SweetVimRspecRunFile<CR>
+map <D-R> :SweetVimRspecRunFocused<CR>
+map <M-D-r> :SweetVimRspecRunPrevious<CR>
+
 "----------------------------------------------------------------------- Colors
 colorscheme solarized "use solarized color scheme
 
 "
-set background=dark "use the light solarized scheme (other option is 'dark')
+set background=dark "use the dark solarized scheme (other option is 'dark')
 call togglebg#map("<F5>")
 
 " turn off the annoying top bar in MacVim
@@ -243,20 +320,20 @@ au BufNewFile,BufRead Podfile,*.podspec      set filetype=ruby
 "-----------------------------------------------------------------neocomplcache
 
 " Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 0
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+" let g:neocomplcache_enable_at_startup = 0
+" 
+" " Plugin key-mappings.
+" inoremap <expr><C-g>     neocomplcache#undo_completion()
+" " inoremap <expr><C-l>     neocomplcache#complete_common_string()
+" 
+" " Recommended key-mappings.
+" " <CR>: close popup and save indent.
+" inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+" inoremap <expr><C-y>  neocomplcache#close_popup()
+" inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 
 
@@ -281,3 +358,22 @@ nmap <leader><Tab> :TagbarToggle<CR>
 "-------------------------------------------------------------------------ctags
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <M-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+
+"-----------------------------------------------------------------------vim-pad
+let g:pad_dir = "~/notes/"
+map <leader>c <Plug>PadOpenPad
+map <leader>x <Plug>ListPads
+let g:pad_use_default_mappings = 0
+
+"-------------------------------------------------------------------Tabularized
+
+if exists(":Tabularize")
+  nmap <Leader>a  :Tabularize /
+  vmap <Leader>a  :Tabularize /
+  nmap <Leader>a= :Tabularize /=<CR>
+  vmap <Leader>a= :Tabularize /=<CR>
+  nmap <Leader>a: :Tabularize /:<CR>
+  vmap <Leader>a: :Tabularize /:<CR>
+endif
+
